@@ -2,6 +2,7 @@
 members = [
     'node',
     'pallets/template',
+    'pallets/pallet-avtandb-kv',
     'runtime',
 ]
 [profile.release]
