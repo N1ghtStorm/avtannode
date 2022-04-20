@@ -265,8 +265,8 @@ impl pallet_sudo::Config for Runtime {
 	type Call = Call;
 }
 
-/// Configure the pallet-template in pallets/template.
-impl pallet_template::Config for Runtime {
+use pallet_avtandb_kv;
+impl pallet_avtandb_kv::Config for Runtime {
 	type Event = Event;
 }
 
@@ -286,7 +286,7 @@ construct_runtime!(
 		TransactionPayment: pallet_transaction_payment::{Pallet, Storage},
 		Sudo: pallet_sudo::{Pallet, Call, Config<T>, Storage, Event<T>},
 		// Include the custom logic from the pallet-template in the runtime.
-		TemplateModule: pallet_template::{Pallet, Call, Storage, Event<T>},
+		AvtanDBKeyValue: pallet_avtandb_kv::{Pallet, Call, Storage, Event<T>},
 	}
 );
 

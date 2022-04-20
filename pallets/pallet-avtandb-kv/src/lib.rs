@@ -16,7 +16,7 @@ pub use pallet::*;
 
 #[frame_support::pallet]
 pub mod pallet {
-	use frame_support::{dispatch::DispatchResult, pallet_prelude::*};
+	use frame_support::{dispatch::{DispatchResult, Vec}, pallet_prelude::*};
 	use frame_system::pallet_prelude::*;
 
 	/// Configure the pallet by specifying the parameters and types on which it depends.
@@ -50,9 +50,10 @@ pub mod pallet {
 	#[pallet::metadata(T::AccountId = "AccountId")]
 	#[pallet::generate_deposit(pub(super) fn deposit_event)]
 	pub enum Event<T: Config> {
-		/// Event documentation should end with an array that provides descriptive names for event
-		/// parameters. [something, who]
-		SomethingStored(u32, T::AccountId),
+		// /// Event documentation should end with an array that provides descriptive names for event
+		// /// parameters. [something, who]
+		// SomethingStored(u32, T::AccountId),
+		NewKeyAdded(Vec<u8>)
 	}
 
 	// Errors inform users that something went wrong.
@@ -69,7 +70,7 @@ pub mod pallet {
 		#[pallet::weight(10_000 + T::DbWeight::get().reads_writes(1, 1))]
 		pub fn add_value(origin: OriginFor<T>, key: Vec<u8>, value: Vec<u8>) -> DispatchResult {
 			let caller = ensure_signed(origin)?;
-			KvStore::<T>::try_mutate(key, |val_opt| -> DispatchResult {
+			KvStore::<T>::try_mutate(key.clone(), |val_opt| -> DispatchResult {
 				match val_opt {
 					Some(_) => {
 						return Err(Error::<T>::KeyAlreadyExists.into())
@@ -80,7 +81,7 @@ pub mod pallet {
 				}
 				Ok(())
 			})?;
-
+			Self::deposit_event(Event::NewKeyAdded(key));
 			Ok(())
 		}
 	}
